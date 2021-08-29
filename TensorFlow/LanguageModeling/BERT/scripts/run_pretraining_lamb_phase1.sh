@@ -68,6 +68,7 @@ if [ $num_gpus -gt 1 ] ; then
    servers=`python -c "import os;print(','.join([ip.split(':')[0]+':'+os.environ['PADDLE_TRAINER_COUNT'] for ip in os.environ['PADDLE_TRAINER_ENDPOINTS'].split(',')]))"`
    global_num_gpus=$(expr $num_gpus \* $PADDLE_TRAINERS_NUM)
    mpi="mpirun --allow-run-as-root -np $global_num_gpus -H $servers --bind-to socket"
+   mpi="horovodrun -np $global_num_gpus -H $servers"
    horovod_str="--horovod"
 fi
 
