@@ -548,7 +548,6 @@ def main(_):
   setup_xla_flags()
 
   tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
-  dllogging = utils.dllogger_class.dllogger_class(FLAGS.dllog_path)
 
   if not FLAGS.do_train and not FLAGS.do_eval:
     raise ValueError("At least one of `do_train` or `do_eval` must be True.")
@@ -556,6 +555,11 @@ def main(_):
   if FLAGS.horovod:
     import horovod.tensorflow as hvd
     hvd.init()
+
+  if (not FLAGS.horovod or hvd.rank() == 0):
+    dllogging = utils.dllogger_class.dllogger_class(FLAGS.dllog_path)
+  else:
+    dllogging = None
 
   bert_config = modeling.BertConfig.from_json_file(FLAGS.bert_config_file)
 
