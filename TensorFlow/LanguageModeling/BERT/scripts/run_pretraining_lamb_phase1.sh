@@ -67,7 +67,7 @@ horovod_str=""
 if [ $num_gpus -gt 1 ] ; then
    servers=`python -c "import os;print(','.join([ip.split(':')[0]+':'+os.environ['PADDLE_TRAINER_COUNT'] for ip in os.environ['PADDLE_TRAINER_ENDPOINTS'].split(',')]))"`
    global_num_gpus=$(expr $num_gpus \* $PADDLE_TRAINERS_NUM)
-   mpi="/usr/mpi/gcc/openmpi-4.0.3rc4/bin/mpirun --allow-run-as-root -np $global_num_gpus -H $servers \
+   mpi="/usr/bin/mpirun --allow-run-as-root -np $global_num_gpus -H $servers \
         -bind-to socket -mca pml ob1 -mca btl ^openib \
         -x NCCL_IB_GID_INDEX -x NCCL_IB_DISABLE \
         -x NCCL_IB_CUDA_SUPPORT -x NCCL_P2P_DISABLE \
